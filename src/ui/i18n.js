@@ -24,6 +24,9 @@ export function t(chave, vars = {}) {
 // Formata número conforme o idioma (vírgula decimal em PT). / Locale-aware number formatting.
 export const fmt = (n, d = 2) => Number(n).toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
 
+// Número com até `max` casas, sem zeros à direita (ex.: 0,05 · 0,1 · 1). / Up to `max` decimals, no trailing zeros.
+export const fmtMax = (n, max = 3) => Number(n).toLocaleString(lang === 'pt' ? 'pt-BR' : 'en-US', { maximumFractionDigits: max });
+
 export function aplicar() {
   document.documentElement.lang = lang === 'pt' ? 'pt-BR' : 'en';
   document.title = t('doc.titulo');

@@ -1,5 +1,6 @@
 // Desenho do mapa em canvas: responsivo e nítido em telas HiDPI. / Canvas map drawing: responsive and HiDPI-sharp.
 import { DELTA } from '../env.js';
+import { remPx, onEscala } from './escala.js';
 
 export const CORES = { agua: '#EAF3FB', corr: '#9CC9EC', destr: '#C9A27E', bloq: '#5B5F6B', abrigo: '#BFE3C9',
   verde: '#2E7D5B', verm: '#C0392B', navy: '#1D2369', grade: '#B8C4D6', madeira: '#8B5A2B', marrom: '#5A3A1A' };
@@ -28,11 +29,12 @@ function seta(ctx, cx, cy, u, a) {
   ctx.lineTo(x1 - dx * h * 1.6 + dy * h, y1 - dy * h * 1.6 - dx * h); ctx.closePath(); ctx.fill();
 }
 
-export function criarMapa(canvas) {
+// maxRem: lado máximo em rem (25 rem = 360 px na escala padrão; os mini-mapas usam menos).
+export function criarMapa(canvas, maxRem = 25) {
   let dados = null;
 
   function ajustar() {
-    const w = Math.max(160, Math.min(canvas.parentElement.clientWidth || 360, 560));
+    const w = Math.round(Math.max(120, Math.min(canvas.parentElement.clientWidth || 360, maxRem * remPx())));
     const dpr = window.devicePixelRatio || 1;
     canvas.style.width = `${w}px`; canvas.style.height = `${w}px`;
     canvas.width = Math.round(w * dpr); canvas.height = Math.round(w * dpr);
@@ -66,18 +68,40 @@ export function criarMapa(canvas) {
     // setas da política (situação inicial das pessoas) nas células livres
     const zeros = new Array(env.nPes).fill(0);
     if (pi) for (const cel of env.celulas) seta(ctx, cel[1] * u + u / 2, cel[0] * u + u / 2, u, pi[env.codifica(cel, zeros)]);
-    // pessoas ainda ilhadas: P1..Pn em vermelho
+    // trilha da rota (animação): linha tracejada pelos centros das células visitadas
+    if (dados.trilha && dados.trilha.length > 1) {
+      ctx.save(); ctx.strokeStyle = 'rgba(29,35,105,.55)'; ctx.lineWidth = Math.max(2, u * 0.05); ctx.setLineDash([u * 0.1, u * 0.08]); ctx.lineJoin = 'round'; ctx.beginPath();
+      dados.trilha.forEach((c, i) => { const X = c[1] * u + u / 2, Y = c[0] * u + u / 2; if (i === 0) ctx.moveTo(X, Y); else ctx.lineTo(X, Y); });
+      ctx.stroke(); ctx.restore();
+    }
+    // pessoas ainda ilhadas: P1..Pn em vermelho (no canto, se o barco está na mesma célula)
     env.pessoas.forEach((p, k) => {
       if (sit[k] !== 0) return;
       ctx.fillStyle = CORES.verm;
-      if (pi) { ctx.font = `bold ${u * 0.22}px Arial, Helvetica, sans-serif`; ctx.fillText(`P${k + 1}`, p[1] * u + u * 0.24, p[0] * u + u * 0.2); }
+      const junto = p[0] === barco[0] && p[1] === barco[1];
+      if (pi || junto) { ctx.font = `bold ${u * 0.22}px Arial, Helvetica, sans-serif`; ctx.fillText(`P${k + 1}`, p[1] * u + u * 0.24, p[0] * u + u * 0.2); }
       else { ctx.font = `bold ${u * 0.34}px Arial, Helvetica, sans-serif`; ctx.fillText(`P${k + 1}`, p[1] * u + u / 2, p[0] * u + u / 2); }
     });
+    // pessoas a bordo (círculo branco com contorno azul e texto vermelho) e salvas (círculo verde com ✓), no canto superior direito
+    if (!pi) {
+      const emblema = (cel, j, txt, fundo, corTxt, borda) => {
+        const r = u * 0.12, X = cel[1] * u + u - r - u * 0.04 - j * (2 * r + u * 0.03), Y = cel[0] * u + r + u * 0.04;
+        ctx.fillStyle = fundo; ctx.strokeStyle = borda; ctx.lineWidth = Math.max(1.5, u * 0.025);
+        ctx.beginPath(); ctx.arc(X, Y, r, 0, 7); ctx.fill(); ctx.stroke();
+        ctx.fillStyle = corTxt; ctx.font = `bold ${u * (txt === '✓' ? 0.16 : 0.115)}px Arial, Helvetica, sans-serif`; ctx.fillText(txt, X, Y + u * 0.005);
+      };
+      let jb = 0, js = 0;
+      env.pessoas.forEach((p, k) => {
+        if (sit[k] === 1) emblema(barco, jb++, `P${k + 1}`, '#FFFFFF', CORES.verm, CORES.navy);
+        else if (sit[k] === 2) emblema(env.abrigo, js++, '✓', CORES.verde, '#FFFFFF', '#1E5A40');
+      });
+    }
     // barco (menor e no canto quando há seta na mesma célula)
     const bx = barco[1] * u + u / 2, by = barco[0] * u + u / 2;
     if (pi) desenharBarco(ctx, bx + u * 0.27, by + u * 0.25, u, 0.5); else desenharBarco(ctx, bx, by + u * 0.02, u, 1);
   }
 
   if (typeof ResizeObserver !== 'undefined') new ResizeObserver(() => desenhar()).observe(canvas.parentElement);
+  onEscala(() => desenhar());
   return { desenhar };
 }

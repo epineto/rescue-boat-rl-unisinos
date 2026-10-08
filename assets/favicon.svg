@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Barco de resgate">
+  <rect width="64" height="64" rx="14" fill="#1D2369"/>
+  <path d="M33 10v30H15z" fill="#fff"/>
+  <path d="M36 18v22h13z" fill="#C0392B"/>
+  <path d="M10 42h44l-7 10H17z" fill="#C9A27E"/>
+  <path d="M8 56q6-5 12 0t12 0 12 0 12 0" fill="none" stroke="#9CC9EC" stroke-width="3" stroke-linecap="round"/>
+</svg>

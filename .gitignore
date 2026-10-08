@@ -6,3 +6,5 @@ node_modules/
 *_key
 __pycache__/
 saidas_t2/
+package-lock.json
+.venv/

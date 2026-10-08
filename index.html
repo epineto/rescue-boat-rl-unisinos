@@ -4,78 +4,137 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Barco de Resgate em Área Alagada · Aprendizado por Reforço</title>
-<meta name="description" content="Aplicação interativa de aprendizado por reforço tabular: um barco resgata pessoas em um mapa alagado. Trabalho da Unisinos.">
+<meta name="description" content="Aplicação interativa de aprendizado por reforço tabular: um barco resgata pessoas em um mapa alagado. Compare Q-learning, Sarsa, Monte Carlo e Iteração de Valor direto no navegador. Trabalho da Unisinos.">
 <meta name="theme-color" content="#1D2369">
-<link rel="icon" href="assets/unisinos.png">
+<meta name="author" content="Epitácio Vicente do Nascimento Neto, Antonio Clerton Santana de Araujo">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="assets/icon-192.png">
+<link rel="manifest" href="manifest.webmanifest">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Barco de Resgate · Unisinos">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:title" content="Barco de Resgate em Área Alagada · Aprendizado por Reforço">
+<meta property="og:description" content="Um barco resgata pessoas em um mapa alagado. Treine e compare Q-learning, Sarsa e Monte Carlo com a Iteração de Valor, direto no navegador.">
+<meta property="og:url" content="https://epineto.github.io/rescue-boat-rl-unisinos/">
+<meta property="og:image" content="https://epineto.github.io/rescue-boat-rl-unisinos/assets/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Mapa 6×6 do Barco de Resgate com correnteza, destroços e abrigo">
+<meta name="twitter:card" content="summary_large_image">
 <link rel="stylesheet" href="style.css">
+<script>/* escala da interface salva (evita piscar no carregamento) */try{var e=localStorage.getItem('barco-resgate-escala');if(e==='80'||e==='90'||e==='100')document.documentElement.dataset.escala=e}catch(_){}</script>
 </head>
 <body>
 <a class="pular" href="#conteudo" data-i18n="pular">Pular para o conteúdo</a>
 
 <header class="cab">
   <div class="cab-in">
-    <img class="logo" src="assets/unisinos.png" alt="Unisinos" data-i18n-attr="alt:cab.logo" height="44">
+    <img class="logo" src="assets/unisinos.png" alt="Unisinos" data-i18n-attr="alt:cab.logo" width="118" height="44">
     <div class="titulos">
       <h1 data-i18n="cab.titulo">Barco de Resgate em Área Alagada</h1>
       <p data-i18n="cab.subtitulo">Flood Rescue Boat · Aprendizado por Reforço tabular no navegador</p>
     </div>
-    <div class="idioma" role="group" aria-label="Idioma" data-i18n-attr="aria-label:lang.grupo">
-      <button type="button" data-lang-btn="pt" lang="pt-BR" aria-pressed="true" title="Português (Brasil)">PT</button>
-      <button type="button" data-lang-btn="en" lang="en" aria-pressed="false" title="English">EN</button>
+    <div class="ctrl-cab">
+      <div class="zoom" role="group" aria-label="Tamanho da interface" data-i18n-attr="aria-label:zoom.grupo">
+        <button type="button" data-escala-btn="80" aria-pressed="false" aria-label="Interface a 80%" title="80%" data-i18n-attr="aria-label:zoom.80;title:zoom.t80"><span aria-hidden="true">A−</span></button>
+        <button type="button" data-escala-btn="90" aria-pressed="true" aria-label="Interface a 90% (padrão)" title="90%" data-i18n-attr="aria-label:zoom.90;title:zoom.t90"><span aria-hidden="true">A</span></button>
+        <button type="button" data-escala-btn="100" aria-pressed="false" aria-label="Interface a 100%" title="100%" data-i18n-attr="aria-label:zoom.100;title:zoom.t100"><span aria-hidden="true">A+</span></button>
+      </div>
+      <div class="idioma" role="group" aria-label="Idioma" data-i18n-attr="aria-label:lang.grupo">
+        <button type="button" data-lang-btn="pt" lang="pt-BR" aria-pressed="true" title="Português (Brasil)">PT</button>
+        <button type="button" data-lang-btn="en" lang="en" aria-pressed="false" title="English">EN</button>
+      </div>
     </div>
   </div>
 </header>
 
-<main id="conteudo" class="grade">
-  <div class="coluna">
-    <section class="cartao" aria-labelledby="t-amb">
-      <h2 id="t-amb" data-i18n="amb.titulo">Ambiente</h2>
+<nav class="nav" aria-label="Seções da página" data-i18n-attr="aria-label:nav.aria">
+  <ul class="nav-in">
+    <li><a href="#ambiente"><span class="ico" aria-hidden="true">🗺️</span><span data-i18n="nav.amb"></span></a></li>
+    <li><a href="#treinar"><span class="ico" aria-hidden="true">🧠</span><span data-i18n="nav.treinar"></span></a></li>
+    <li><a href="#rota"><span class="ico" aria-hidden="true">⛵</span><span data-i18n="nav.rota"></span></a></li>
+    <li><a href="#comparar"><span class="ico" aria-hidden="true">📊</span><span data-i18n="nav.comparar"></span></a></li>
+    <li><a href="#sensibilidade"><span class="ico" aria-hidden="true">🌊</span><span data-i18n="nav.sens"></span></a></li>
+    <li><a href="#busca"><span class="ico" aria-hidden="true">🔎</span><span data-i18n="nav.busca"></span></a></li>
+    <li><a href="#editor"><span class="ico" aria-hidden="true">✏️</span><span data-i18n="nav.editor"></span></a></li>
+    <li><a href="#reproduzir"><span class="ico" aria-hidden="true">📦</span><span data-i18n="nav.repro"></span></a></li>
+  </ul>
+</nav>
+
+<main id="conteudo">
+  <div class="avisos" role="status" aria-live="polite">
+    <div id="aviso-link" class="aviso-link" hidden>
+      <div><strong id="aviso-link-titulo"></strong><ul></ul></div>
+      <button type="button" id="aviso-link-fechar" class="btn sec" data-i18n="link.fechar">Fechar aviso</button>
+    </div>
+  </div>
+
+  <section id="ambiente" class="secao" aria-labelledby="t-amb">
+    <h2 id="t-amb"><span class="ico" aria-hidden="true">🗺️</span> <span data-i18n="sec.amb"></span></h2>
+    <p class="lede" data-i18n="sec.ambDesc"></p>
+  <div class="grade2 g3">
+    <div class="cartao">
+      <h3 data-i18n="amb.cardMapa">Mapa e legenda</h3>
       <div class="mapa-caixa"><canvas id="mapa" role="img" aria-describedby="mapa-desc"></canvas></div>
       <pre id="mapa-desc" class="so-leitor"></pre>
       <ul class="legenda" aria-label="Legenda" data-i18n-attr="aria-label:leg.titulo">
         <li><i class="sw" style="background:#EAF3FB"></i><span data-i18n="leg.agua">Água</span></li>
         <li><i class="sw" style="background:#9CC9EC;color:#1D2369">≈</i><span data-i18n="leg.corr">Correnteza</span></li>
-        <li><i class="sw" style="background:#C9A27E;color:#5A3A1A">✕</i><span data-i18n="leg.destrocos">Destroços</span></li>
+        <li><i class="sw" style="background:#C9A27E;color:#3E2710">✕</i><span data-i18n="leg.destrocos">Destroços</span></li>
         <li><i class="sw" style="background:#5B5F6B"></i><span data-i18n="leg.bloqueio">Bloqueio</span></li>
-        <li><i class="sw" style="background:#BFE3C9;color:#2E7D5B">H</i><span data-i18n="leg.abrigo">Abrigo</span></li>
+        <li><i class="sw" style="background:#BFE3C9;color:#1B5E40">H</i><span data-i18n="leg.abrigo">Abrigo</span></li>
         <li><i class="sw" style="background:#EAF3FB;color:#C0392B">P</i><span data-i18n="leg.pessoa">Pessoa ilhada</span></li>
         <li><svg class="sw" viewBox="-0.5 -0.5 1 1" aria-hidden="true"><rect x="-.5" y="-.5" width="1" height="1" fill="#EAF3FB"/><path d="M-.32 .08H.32L.2 .28H-.2Z" fill="#8B5A2B"/><path d="M.03 -.32V.04H.28Z" fill="#fff" stroke="#1D2369" stroke-width=".04"/></svg><span data-i18n="leg.barco">Barco</span></li>
       </ul>
       <p id="resumo" class="resumo"></p>
-      <fieldset class="campos">
-        <legend data-i18n="amb.params">Parâmetros do ambiente</legend>
+      
+    </div>
+    <div class="coluna">
+    <div class="cartao">
+      <h3 data-i18n="amb.params">Parâmetros do ambiente</h3><fieldset class="campos sem-borda">
+        <legend class="so-leitor" data-i18n="amb.params">Parâmetros do ambiente</legend>
         <div class="campo"><label for="p-destrocos" data-i18n="amb.rDestrocos">Penalidade dos destroços</label>
-          <input id="p-destrocos" type="number" step="1" min="-100" max="0" value="-10" inputmode="decimal"></div>
+          <input data-dec id="p-destrocos" type="text" value="-10" inputmode="decimal"></div>
         <div class="campo"><label for="p-corr" data-i18n="amb.pCorr">Probabilidade da correnteza</label>
-          <input id="p-corr" type="number" step="0.05" min="0" max="1" value="0.2" inputmode="decimal"></div>
+          <input data-dec id="p-corr" type="text" value="0,2" inputmode="decimal"></div>
         <div class="campo"><label for="p-cap" data-i18n="amb.capacidade">Capacidade do barco (pessoas)</label>
           <select id="p-cap"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>
         <button type="button" id="b-restaurar" class="btn sec" data-i18n="amb.restaurar">Restaurar padrão</button>
         <p class="nota" data-i18n="amb.aviso">Ao mudar um parâmetro, o ambiente é reconstruído.</p>
       </fieldset>
       <p id="aviso-amb" class="nota aviso" role="status" aria-live="polite"></p>
-    </section>
-
-    <section class="cartao" aria-labelledby="t-ref">
-      <h2 id="t-ref" data-i18n="ref.titulo">Referência: Iteração de Valor</h2>
+    
+    </div>
+    <div class="cartao">
+      <h3 id="t-ref" data-i18n="ref.titulo">Referência: Iteração de Valor</h3>
       <p class="nota" data-i18n="ref.desc"></p>
       <dl id="ref-res" class="metricas" aria-live="polite"></dl>
       <label class="chk"><input type="checkbox" id="c-otima"> <span data-i18n="ref.setas">Mostrar política ótima (setas)</span></label>
-    </section>
+    
+    </div>
+    </div>
   </div>
+  </section>
 
-  <div class="coluna">
-    <section class="cartao" aria-labelledby="t-tr">
-      <h2 id="t-tr" data-i18n="tr.titulo">Treinar</h2>
-      <fieldset class="campos grade-campos">
+  <section id="treinar" class="secao" aria-labelledby="t-tr">
+    <h2 id="t-tr"><span class="ico" aria-hidden="true">🧠</span> <span data-i18n="nav.treinar"></span></h2>
+    <p class="lede" data-i18n="tr.desc"></p>
+  <div class="grade2">
+    <div class="cartao">
+      <h3 data-i18n="tr.cardCfg">Configuração</h3>
+      <fieldset class="campos grade-campos sem-borda">
         <legend class="so-leitor" data-i18n="tr.titulo">Treinar</legend>
         <div class="campo larg"><label for="t-algo" data-i18n="tr.algo">Algoritmo</label>
-          <select id="t-algo"><option value="q" data-i18n="tr.qlearning">Q-learning</option><option value="sarsa" data-i18n="tr.sarsa">Sarsa</option></select></div>
-        <div class="campo"><label for="t-alpha" data-i18n="tr.alpha">α</label><input id="t-alpha" type="number" step="0.01" min="0.001" max="1" value="0.1" inputmode="decimal"></div>
-        <div class="campo"><label for="t-eps" data-i18n="tr.eps0">ε₀</label><input id="t-eps" type="number" step="0.05" min="0" max="1" value="1" inputmode="decimal"></div>
-        <div class="campo"><label for="t-gamma" data-i18n="tr.gamma">γ</label><input id="t-gamma" type="number" step="0.01" min="0" max="1" value="0.95" inputmode="decimal"></div>
-        <div class="campo"><label for="t-nep" data-i18n="tr.nEp">Episódios</label><input id="t-nep" type="number" step="1000" min="100" max="500000" value="30000" inputmode="numeric"></div>
-        <div class="campo"><label for="t-seed" data-i18n="tr.seed">Semente</label><input id="t-seed" type="number" step="1" min="0" value="0" inputmode="numeric"></div>
+          <select id="t-algo"><option value="q" data-i18n="tr.qlearning">Q-learning</option><option value="sarsa" data-i18n="tr.sarsa">Sarsa</option><option value="mc" data-i18n="tr.mc">Monte Carlo</option><option value="ip" data-i18n="tr.ip">Iteração de Política</option></select>
+          <p id="tr-nota-algo" class="nota"></p></div>
+        <div class="campo" id="f-passo"><label for="t-passo" data-i18n="tr.passo">Passo α</label>
+          <select id="t-passo"><option value="media" data-i18n="tr.passoMedia">média amostral</option><option value="const" data-i18n="tr.passoConst">constante</option></select></div>
+        <div class="campo" id="f-alpha"><label for="t-alpha" data-i18n="tr.alpha">α</label><input data-dec id="t-alpha" type="text" value="0,1" inputmode="decimal"></div>
+        <div class="campo" id="f-eps"><label for="t-eps" data-i18n="tr.eps0">ε₀</label><input data-dec id="t-eps" type="text" value="1" inputmode="decimal"></div>
+        <div class="campo"><label for="t-gamma" data-i18n="tr.gamma">γ</label><input data-dec id="t-gamma" type="text" value="0,95" inputmode="decimal"></div>
+        <div class="campo" id="f-nep"><label for="t-nep" data-i18n="tr.nEp">Episódios</label><input id="t-nep" type="number" step="1000" min="100" max="500000" value="30000" inputmode="numeric"></div>
+        <div class="campo" id="f-seed"><label for="t-seed" data-i18n="tr.seed">Semente</label><input id="t-seed" type="number" step="1" min="0" value="0" inputmode="numeric"></div>
       </fieldset>
       <div class="acoes">
         <button type="button" id="b-treinar" class="btn" data-i18n="tr.treinar">Treinar</button>
@@ -83,27 +142,315 @@
       </div>
       <progress id="barra" max="100" value="0" aria-label="Progresso do treino" data-i18n-attr="aria-label:tr.progressoAria"></progress>
       <p id="status" class="status" role="status" aria-live="polite"></p>
+      <p id="tr-corrigido" class="nota aviso" role="status" aria-live="polite"></p>
 
+      <h4 data-i18n="tr.res.titulo">Política gulosa aprendida</h4>
+      <div id="tr-res" aria-live="polite"></div>
+      <label class="chk"><input type="checkbox" id="c-aprendida" disabled> <span data-i18n="tr.res.setas">Mostrar política aprendida (setas)</span></label>
+    
+    </div>
+    <div class="cartao">
+      <h3 data-i18n="tr.cardCurvas">Curvas de aprendizado</h3><div id="tr-graficos">
       <label class="chk"><input type="checkbox" id="c-log" checked> <span data-i18n="tr.escalaLog">Eixo x em escala logarítmica</span></label>
       <figure class="graf"><figcaption data-i18n="tr.grafRet">Retorno por episódio</figcaption><div class="graf-caixa"><canvas id="g-ret" role="img"></canvas></div></figure>
       <figure class="graf"><figcaption data-i18n="tr.grafSuc">Taxa de sucesso</figcaption><div class="graf-caixa"><canvas id="g-suc" role="img"></canvas></div></figure>
+      </div>
 
-      <h3 data-i18n="tr.res.titulo">Política gulosa aprendida</h3>
-      <div id="tr-res" aria-live="polite"></div>
-      <label class="chk"><input type="checkbox" id="c-aprendida" disabled> <span data-i18n="tr.res.setas">Mostrar política aprendida (setas)</span></label>
-    </section>
+      
+    </div>
   </div>
+  </section>
+
+  <section id="rota" class="secao" aria-labelledby="t-rota">
+    <h2 id="t-rota"><span class="ico" aria-hidden="true">⛵</span> <span data-i18n="rota.titulo"></span></h2>
+    <p class="lede" data-i18n="rota.desc"></p>
+  <div class="grade2">
+    <div class="cartao">
+
+      <div class="mapa-caixa"><canvas id="mapa-rota" role="img" aria-describedby="rota-desc"></canvas></div>
+      <pre id="rota-desc" class="so-leitor"></pre>
+      <ul class="legenda" aria-label="Legenda das pessoas" data-i18n-attr="aria-label:rota.legTitulo">
+        <li><i class="sw" style="background:#EAF3FB;color:#C0392B">P1</i><span data-i18n="rota.legIlhada">ilhada</span></li>
+        <li><i class="sw" style="background:#fff;color:#C0392B;border:2px solid #1D2369;border-radius:50%;font-size:.6rem">P1</i><span data-i18n="rota.legBordo">a bordo</span></li>
+        <li><i class="sw" style="background:#2E7D5B;color:#fff;border-radius:50%;border-color:#1E5A40">✓</i><span data-i18n="rota.legSalva">salva (no abrigo)</span></li>
+      </ul>
+      
+    </div>
+    <div class="cartao">
+<fieldset class="campos grade-campos sem-borda">
+        <legend class="so-leitor" data-i18n="rota.titulo">Rota do barco</legend>
+        <div class="campo larg"><label for="r-fonte" data-i18n="rota.fonte">Política</label>
+          <select id="r-fonte"><option value="otima" data-i18n="rota.fonteOtima">Ótima (Iteração de Valor)</option><option value="aprendida" data-i18n="rota.fonteAprendida" disabled>Aprendida (treine primeiro)</option></select></div>
+        <div class="campo"><label for="r-seed" data-i18n="rota.seed">Semente da rota</label><input id="r-seed" type="number" step="1" min="0" value="3" inputmode="numeric"></div>
+        <div class="campo"><label for="r-vel" data-i18n="rota.vel">Velocidade</label>
+          <select id="r-vel"><option value="900" data-i18n="rota.velLenta">Lenta</option><option value="450" selected data-i18n="rota.velNormal">Normal</option><option value="160" data-i18n="rota.velRapida">Rápida</option></select></div>
+      </fieldset>
+      <div class="acoes">
+        <button type="button" id="b-play" class="btn" data-i18n="rota.play">Iniciar</button>
+        <button type="button" id="b-passo" class="btn sec" data-i18n="rota.passo">Passo</button>
+        <button type="button" id="b-reiniciar" class="btn sec" data-i18n="rota.reiniciar">Reiniciar</button>
+      </div>
+      <p id="r-nota-mov" class="nota" hidden data-i18n="rota.semMovimento"></p>
+      <dl id="r-hud" class="metricas"></dl>
+      <p id="r-pessoas" class="resumo"></p>
+      <h3 data-i18n="rota.logTitulo">Registro de eventos</h3>
+      <ol id="r-log" class="log" aria-label="Registro de eventos" data-i18n-attr="aria-label:rota.logTitulo"></ol>
+      <p id="r-anuncio" class="so-leitor" role="status" aria-live="polite"></p>
+    
+    </div>
+  </div>
+  </section>
+
+  <section id="comparar" class="secao" aria-labelledby="t-cmp">
+    <h2 id="t-cmp"><span class="ico" aria-hidden="true">📊</span> <span data-i18n="cmp.titulo"></span></h2>
+    <p class="lede" data-i18n="cmp.desc"></p>
+    <div class="cartao larga">
+
+    <fieldset class="campos">
+      <legend data-i18n="cmp.config">Configuração de cada algoritmo</legend>
+      <div class="cmp-grade">
+        <div class="cmp-linha" data-algo="mc"><strong data-i18n="cmp.mc">Monte Carlo ε-soft</strong>
+          <div class="campo"><label for="m-passo" data-i18n="tr.passo">Passo α</label><select id="m-passo"><option value="media" data-i18n="tr.passoMedia">média amostral</option><option value="const" data-i18n="tr.passoConst">constante</option></select></div>
+          <div class="campo"><label for="m-alpha" data-i18n="tr.alpha">α</label><input data-dec id="m-alpha" type="text" value="0,1" inputmode="decimal"></div>
+          <div class="campo"><label for="m-eps" data-i18n="tr.eps0">ε₀</label><input data-dec id="m-eps" type="text" value="0,5" inputmode="decimal"></div>
+          <div class="campo"><label for="m-gamma" data-i18n="tr.gamma">γ</label><input data-dec id="m-gamma" type="text" value="0,95" inputmode="decimal"></div>
+          <div class="campo"><label for="m-nep" data-i18n="tr.nEp">Episódios</label><input id="m-nep" type="number" step="1000" min="100" max="500000" value="60000" inputmode="numeric"></div></div>
+        <div class="cmp-linha" data-algo="q"><strong data-i18n="cmp.q">Q-learning</strong>
+          <div class="campo"><label for="q-alpha" data-i18n="tr.alpha">α</label><input data-dec id="q-alpha" type="text" value="0,1" inputmode="decimal"></div>
+          <div class="campo"><label for="q-eps" data-i18n="tr.eps0">ε₀</label><input data-dec id="q-eps" type="text" value="1" inputmode="decimal"></div>
+          <div class="campo"><label for="q-gamma" data-i18n="tr.gamma">γ</label><input data-dec id="q-gamma" type="text" value="0,95" inputmode="decimal"></div>
+          <div class="campo"><label for="q-nep" data-i18n="tr.nEp">Episódios</label><input id="q-nep" type="number" step="1000" min="100" max="500000" value="30000" inputmode="numeric"></div></div>
+        <div class="cmp-linha" data-algo="sarsa"><strong data-i18n="cmp.sarsa">Sarsa</strong>
+          <div class="campo"><label for="s-alpha" data-i18n="tr.alpha">α</label><input data-dec id="s-alpha" type="text" value="0,2" inputmode="decimal"></div>
+          <div class="campo"><label for="s-eps" data-i18n="tr.eps0">ε₀</label><input data-dec id="s-eps" type="text" value="1" inputmode="decimal"></div>
+          <div class="campo"><label for="s-gamma" data-i18n="tr.gamma">γ</label><input data-dec id="s-gamma" type="text" value="0,99" inputmode="decimal"></div>
+          <div class="campo"><label for="s-nep" data-i18n="tr.nEp">Episódios</label><input id="s-nep" type="number" step="1000" min="100" max="500000" value="30000" inputmode="numeric"></div></div>
+      </div>
+      <div class="cmp-rodape">
+        <div class="campo"><label for="c-nsem" data-i18n="cmp.nSem">Número de sementes</label>
+          <select id="c-nsem"><option value="3">3</option><option value="5" selected>5</option><option value="10">10</option><option value="20">20</option></select></div>
+        <button type="button" id="b-cmp-padrao" class="btn sec" data-i18n="cmp.padrao">Restaurar melhores configurações</button>
+      </div>
+    </fieldset>
+    <div class="acoes">
+      <button type="button" id="b-comparar" class="btn" data-i18n="cmp.rodar">Comparar</button>
+      <button type="button" id="b-cmp-cancelar" class="btn perigo" data-i18n="cmp.cancelar" disabled>Cancelar</button>
+      <button type="button" id="b-csv" class="btn sec" data-i18n="cmp.csv" disabled>Exportar CSV</button>
+      <button type="button" id="b-csv-curvas" class="btn sec" data-i18n="cmp.csvCurvas" disabled>Exportar curvas (CSV)</button>
+    </div>
+    <progress id="cmp-barra" max="100" value="0" aria-label="Progresso da comparação" data-i18n-attr="aria-label:cmp.progressoAria"></progress>
+    <p id="cmp-status" class="status"></p>
+    <p id="cmp-anuncio" class="so-leitor" role="status" aria-live="polite"></p>
+
+    <div id="cmp-res" hidden>
+      <h3 data-i18n="cmp.tabela">Resultados (política gulosa final de cada semente)</h3>
+      <div class="tabela-rolavel" tabindex="0" role="region" aria-labelledby="t-cmp"><table id="cmp-tab"></table></div>
+      <p id="cmp-nota-ic" class="nota"></p>
+
+      <h3 data-i18n="cmp.curvas">Curvas de aprendizado (média e IC95 entre sementes)</h3>
+      <label class="chk"><input type="checkbox" id="cmp-log" checked> <span data-i18n="tr.escalaLog">Eixo x em escala logarítmica</span></label>
+      <ul id="cmp-leg" class="legenda"></ul>
+      <div class="graf-par">
+        <figure class="graf"><figcaption data-i18n="cmp.grafRet">Retorno por episódio (treino)</figcaption><div class="graf-caixa"><canvas id="cg-ret" role="img"></canvas></div></figure>
+        <figure class="graf"><figcaption data-i18n="cmp.grafSuc">Taxa de sucesso (treino)</figcaption><div class="graf-caixa"><canvas id="cg-suc" role="img"></canvas></div></figure>
+      </div>
+
+      <h3 data-i18n="cmp.mapas">Políticas gulosas (uma semente representativa)</h3>
+      <div id="cmp-mapas" class="mini-mapas"></div>
+    </div>
+    <p class="vazio" data-i18n="vazio.cmp"></p>
+  
+    </div>
+  </section>
+
+  <section id="sensibilidade" class="secao" aria-labelledby="t-sens">
+    <h2 id="t-sens"><span class="ico" aria-hidden="true">🌊</span> <span data-i18n="sens.titulo"></span></h2>
+    <p class="lede" data-i18n="sens.desc"></p>
+    <div class="cartao larga">
+
+    <fieldset class="campos">
+      <legend data-i18n="sens.config">Penalidades a testar</legend>
+      <div class="cmp-rodape">
+        <div class="campo cresce"><label for="s-lista" data-i18n="sens.lista">Penalidades (separe por espaço ou ponto e vírgula)</label>
+          <input id="s-lista" type="text" value="-10; -15; -20; -30; -60" inputmode="text" autocomplete="off" aria-describedby="s-aviso"></div>
+        <div class="campo"><label for="s-nsem" data-i18n="sens.nSem">Sementes (Q-learning e Sarsa)</label>
+          <select id="s-nsem"><option value="3">3</option><option value="5" selected>5</option><option value="10">10</option></select></div>
+        <button type="button" id="b-sens-padrao" class="btn sec" data-i18n="sens.padrao">Restaurar penalidades da pesquisa</button>
+      </div>
+      <p id="s-aviso" class="nota aviso" role="status" aria-live="polite"></p>
+    </fieldset>
+    <div class="acoes">
+      <button type="button" id="b-sens-vi" class="btn" data-i18n="sens.calcular">Calcular (Iteração de Valor)</button>
+      <button type="button" id="b-sens-rl" class="btn" data-i18n="sens.incluir">Incluir Q-learning e Sarsa</button>
+      <button type="button" id="b-sens-cancelar" class="btn perigo" data-i18n="cmp.cancelar" disabled>Cancelar</button>
+      <button type="button" id="b-sens-csv" class="btn sec" data-i18n="cmp.csv" disabled>Exportar CSV</button>
+    </div>
+    <progress id="sens-barra" max="100" value="0" aria-label="Progresso da sensibilidade" data-i18n-attr="aria-label:sens.progressoAria"></progress>
+    <p id="sens-status" class="status"></p>
+    <p id="sens-anuncio" class="so-leitor" role="status" aria-live="polite"></p>
+    <div id="sens-res" hidden>
+      <p id="sens-destaque" class="destaque-rota"></p>
+      <h3 data-i18n="sens.tabela">Resultados por penalidade</h3>
+      <div class="tabela-rolavel" tabindex="0" role="region" aria-labelledby="t-sens"><table id="sens-tab"></table></div>
+      <p id="sens-nota" class="nota"></p>
+      <h3 data-i18n="sens.graficos">Perfil de risco da política em função da penalidade</h3>
+      <ul id="sens-leg" class="legenda"></ul>
+      <div class="graf-par">
+        <figure class="graf"><figcaption data-i18n="sens.grafDest">Passos em destroços por episódio</figcaption><div class="graf-caixa"><canvas id="sg-destr" role="img"></canvas></div></figure>
+        <figure class="graf"><figcaption data-i18n="sens.grafCorr">Passos na correnteza por episódio</figcaption><div class="graf-caixa"><canvas id="sg-corr" role="img"></canvas></div></figure>
+      </div>
+    </div>
+    <p class="vazio" data-i18n="vazio.sens"></p>
+  
+    </div>
+  </section>
+
+  <section id="busca" class="secao" aria-labelledby="t-busca">
+    <h2 id="t-busca"><span class="ico" aria-hidden="true">🔎</span> <span data-i18n="busca.titulo"></span></h2>
+    <p class="lede" data-i18n="busca.desc"></p>
+    <div class="cartao larga">
+
+    <fieldset class="campos" id="busca-grade">
+      <legend data-i18n="busca.grade">Grade de hiperparâmetros</legend>
+      <p class="nota" data-i18n="busca.ajudaGrade"></p>
+      <div class="cmp-grade">
+        <div class="busca-linha"><label class="chk"><input type="checkbox" id="bq-ativo" checked> <strong data-i18n="cmp.q">Q-learning</strong></label>
+          <div class="campo"><label for="bq-alpha" data-i18n="tr.alpha">α</label><input id="bq-alpha" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bq-eps" data-i18n="tr.eps0">ε₀</label><input id="bq-eps" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bq-gamma" data-i18n="tr.gamma">γ</label><input id="bq-gamma" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bq-nep" data-i18n="tr.nEp">Episódios</label><input id="bq-nep" type="number" step="1000" min="100" max="500000" inputmode="numeric"></div></div>
+        <div class="busca-linha"><label class="chk"><input type="checkbox" id="bs-ativo" checked> <strong data-i18n="cmp.sarsa">Sarsa</strong></label>
+          <div class="campo"><label for="bs-alpha" data-i18n="tr.alpha">α</label><input id="bs-alpha" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bs-eps" data-i18n="tr.eps0">ε₀</label><input id="bs-eps" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bs-gamma" data-i18n="tr.gamma">γ</label><input id="bs-gamma" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bs-nep" data-i18n="tr.nEp">Episódios</label><input id="bs-nep" type="number" step="1000" min="100" max="500000" inputmode="numeric"></div></div>
+        <div class="busca-linha"><label class="chk"><input type="checkbox" id="bm-ativo" checked> <strong data-i18n="cmp.mc">Monte Carlo ε-soft</strong></label>
+          <div class="campo"><label for="bm-alpha" data-i18n="busca.alphaMc">α (ou “média”)</label><input id="bm-alpha" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bm-eps" data-i18n="tr.eps0">ε₀</label><input id="bm-eps" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bm-gamma" data-i18n="tr.gamma">γ</label><input id="bm-gamma" type="text" autocomplete="off"></div>
+          <div class="campo"><label for="bm-nep" data-i18n="tr.nEp">Episódios</label><input id="bm-nep" type="number" step="1000" min="100" max="500000" inputmode="numeric"></div></div>
+      </div>
+      <div class="cmp-rodape">
+        <div class="campo"><label for="b-nsem" data-i18n="cmp.nSem">Número de sementes</label><input id="b-nsem" type="number" step="1" min="1" max="30" value="10" inputmode="numeric"></div>
+        <label class="chk"><input type="checkbox" id="b-rapido"> <span data-i18n="busca.rapido">Modo rápido (3 sementes)</span></label>
+        <button type="button" id="b-busca-padrao" class="btn sec" data-i18n="busca.padrao">Restaurar grade da pesquisa</button>
+      </div>
+      <p id="b-resumo" class="resumo"></p>
+      <p id="b-aviso" class="nota aviso" role="status" aria-live="polite"></p>
+    </fieldset>
+    <div class="acoes">
+      <button type="button" id="b-busca" class="btn" data-i18n="busca.rodar">Rodar a busca</button>
+      <button type="button" id="b-busca-cancelar" class="btn perigo" data-i18n="cmp.cancelar" disabled>Cancelar</button>
+      <button type="button" id="b-busca-csv" class="btn sec" data-i18n="busca.csv" disabled>CSV com todas as configurações</button>
+      <button type="button" id="b-busca-csv-sem" class="btn sec" data-i18n="busca.csvSem" disabled>CSV por semente</button>
+    </div>
+    <progress id="busca-barra" max="100" value="0" aria-label="Progresso da busca" data-i18n-attr="aria-label:busca.progressoAria"></progress>
+    <p id="busca-status" class="status"></p>
+    <p id="busca-anuncio" class="so-leitor" role="status" aria-live="polite"></p>
+    <div id="busca-res" hidden>
+      <h3 data-i18n="busca.melhoresTitulo">Melhor configuração de cada algoritmo</h3>
+      <ul id="busca-melhores" class="melhores"></ul>
+      <p id="busca-aplicado" class="nota aviso" role="status" aria-live="polite"></p>
+      <h3 data-i18n="busca.tabela">Todas as configurações</h3>
+      <div class="campo filtro"><label for="b-filtro" data-i18n="busca.filtro">Mostrar</label>
+        <select id="b-filtro"><option value="todos" data-i18n="busca.todos">Todos os algoritmos</option><option value="q" data-i18n="cmp.q">Q-learning</option><option value="sarsa" data-i18n="cmp.sarsa">Sarsa</option><option value="mc" data-i18n="cmp.mc">Monte Carlo ε-soft</option></select></div>
+      <div class="tabela-rolavel alta" tabindex="0" role="region" aria-labelledby="t-busca"><table id="busca-tab"></table></div>
+      <p id="busca-nota" class="nota"></p>
+    </div>
+    <p class="vazio" data-i18n="vazio.busca"></p>
+  
+    </div>
+  </section>
+
+  <section id="editor" class="secao" aria-labelledby="t-ed">
+    <h2 id="t-ed"><span class="ico" aria-hidden="true">✏️</span> <span data-i18n="ed.titulo"></span></h2>
+    <p class="lede" data-i18n="ed.desc"></p>
+    <div class="cartao larga">
+      <div class="ed-layout">
+        <div class="ed-esq">
+<div class="mapa-caixa"><div id="e-grade" class="e-grade" role="grid" aria-label="Grade do mapa" data-i18n-attr="aria-label:ed.gradeAria" aria-describedby="e-ajuda"></div></div>
+        </div>
+        <div class="ed-dir">
+<div class="ed-topo">
+        <div class="campo"><label for="e-tam" data-i18n="ed.tamanho">Tamanho do mapa</label><select id="e-tam"></select></div>
+        <fieldset class="paleta"><legend data-i18n="ed.pincel">Pincel</legend><div id="e-paleta" class="paleta-itens"></div></fieldset>
+      </div>
+
+      
+      
+      <p id="e-ajuda" class="nota" data-i18n="ed.ajuda"></p>
+      <p id="e-info" class="resumo"></p>
+      <div aria-live="polite"><ul id="e-erros" class="erros-mapa"></ul></div>
+      <p id="e-estado" class="nota"></p>
+      <div class="acoes">
+        <button type="button" id="e-aplicar" class="btn" data-i18n="ed.aplicar">Aplicar</button>
+        <button type="button" id="e-restaurar" class="btn sec" data-i18n="ed.restaurar">Restaurar mapa padrão</button>
+      </div>
+    
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="reproduzir" class="secao" aria-labelledby="t-rep">
+    <h2 id="t-rep"><span class="ico" aria-hidden="true">📦</span> <span data-i18n="rep.titulo"></span></h2>
+    <p class="lede" data-i18n="rep.desc"></p>
+  <div class="grade2 g3">
+    <div class="cartao">
+
+    <div class="acoes">
+      <button type="button" id="b-rep" class="btn" data-i18n="rep.rodar">Reproduzir a pesquisa</button>
+      <button type="button" id="b-rep-cancelar" class="btn perigo" data-i18n="rep.cancelar" disabled>Cancelar</button>
+      <button type="button" id="b-rep-zip" class="btn sec" data-i18n="rep.zip" disabled>Baixar pacote de CSVs (.zip)</button>
+    </div>
+    <progress id="rep-barra" max="100" value="0" aria-label="Progresso global" data-i18n-attr="aria-label:rep.progressoAria"></progress>
+    <p id="rep-status" class="status"></p>
+    <ol id="rep-etapas" class="etapas" aria-label="Etapas" data-i18n-attr="aria-label:rep.etapasAria"></ol>
+    <p id="rep-anuncio" class="so-leitor" role="status" aria-live="polite"></p>
+  
+
+    </div>
+    <div class="coluna">
+    <div class="cartao">
+      <h3 data-i18n="mat.titulo">Materiais</h3>
+      <ul class="materiais">
+        <li><a href="https://drive.google.com/file/d/1USXmX9e0h3yvlcMSEU0GcgKP6sRh2YRU/view" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">📓</span> <span data-i18n="mat.notebook">Notebook público (Google Colab)</span> <span class="so-leitor" data-i18n="rod.externo"></span></a></li>
+        <li><a href="https://github.com/epineto/rescue-boat-rl-unisinos/blob/main/reference/python/rescue_boat_rl.py" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">🐍</span> <span data-i18n="mat.python">Código de referência em Python</span> <span class="so-leitor" data-i18n="rod.externo"></span></a></li>
+        <!-- RELATORIO: quando o relatório (PDF) estiver publicado, adicione aqui um <li> com o link, por exemplo:
+        <li><a href="URL-DO-RELATORIO" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">📄</span> <span data-i18n="mat.relatorio">Relatório</span></a></li>
+        e acrescente a chave 'mat.relatorio' em src/i18n/pt.js e src/i18n/en.js. -->
+        <!-- VIDEO: quando o vídeo estiver publicado, adicione aqui um <li> com o link, por exemplo:
+        <li><a href="URL-DO-VIDEO" target="_blank" rel="noopener noreferrer"><span class="ico" aria-hidden="true">🎬</span> <span data-i18n="mat.video">Vídeo de apresentação</span></a></li>
+        e acrescente a chave 'mat.video' em src/i18n/pt.js e src/i18n/en.js. -->
+      </ul>
+      <p class="nota" data-i18n="mat.nota"></p>
+    </div>
+    <div class="cartao">
+      <h3 id="t-link" data-i18n="link.titulo">Compartilhar configuração</h3>
+      <p class="nota" data-i18n="link.desc"></p>
+      <div class="acoes"><button type="button" id="b-link" class="btn" data-i18n="link.copiar">Copiar link da configuração</button></div>
+      <div class="campo"><label for="link-url" data-i18n="link.rotulo">Link gerado</label><input id="link-url" type="text" readonly></div>
+      <p id="link-status" class="status" role="status" aria-live="polite"></p>
+    
+    </div>
+    </div>
+  </div>
+  </section>
 </main>
 
 <footer class="rodape">
-  <p><strong data-i18n="rod.autores">Autores</strong>: Epitácio Vicente do Nascimento Neto · Antonio Clerton Santana de Araujo</p>
-  <p data-i18n="rod.programa">PPGCA · Unisinos</p>
-  <p data-i18n="rod.professor">Professor: Gabriel de Oliveira Ramos</p>
-  <p class="links">
-    <a href="https://drive.google.com/file/d/1USXmX9e0h3yvlcMSEU0GcgKP6sRh2YRU/view" target="_blank" rel="noopener noreferrer"><span data-i18n="rod.notebook">Notebook público</span> <span class="so-leitor" data-i18n="rod.externo"></span></a>
-    <a href="https://github.com/epineto/rescue-boat-rl-unisinos" target="_blank" rel="noopener noreferrer"><span data-i18n="rod.repo">Repositório</span> <span class="so-leitor" data-i18n="rod.externo"></span></a>
-    <a href="LICENSE" data-i18n="rod.licenca">Licença MIT</a>
-  </p>
+  <div class="rodape-in">
+    <div>
+      <p><strong data-i18n="rod.autores">Autores</strong>: Epitácio Vicente do Nascimento Neto · Antonio Clerton Santana de Araujo</p>
+      <p data-i18n="rod.programa">PPGCA · Unisinos</p>
+      <p data-i18n="rod.professor">Professor: Gabriel de Oliveira Ramos</p>
+    </div>
+    <p class="links">
+      <a href="https://drive.google.com/file/d/1USXmX9e0h3yvlcMSEU0GcgKP6sRh2YRU/view" target="_blank" rel="noopener noreferrer"><span data-i18n="rod.notebook">Notebook público</span> <span class="so-leitor" data-i18n="rod.externo"></span></a>
+      <a href="https://github.com/epineto/rescue-boat-rl-unisinos" target="_blank" rel="noopener noreferrer"><span data-i18n="rod.repo">Repositório</span> <span class="so-leitor" data-i18n="rod.externo"></span></a>
+      <a href="https://github.com/epineto/rescue-boat-rl-unisinos/blob/main/LICENSE" target="_blank" rel="noopener noreferrer"><span data-i18n="rod.licenca">Licença MIT</span> <span class="so-leitor" data-i18n="rod.externo"></span></a>
+    </p>
+  </div>
 </footer>
 
 <script type="module" src="src/ui/app.js"></script>

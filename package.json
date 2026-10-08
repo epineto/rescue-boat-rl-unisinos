@@ -1,9 +1,16 @@
 {
   "name": "rescue-boat-rl-unisinos",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Barco de Resgate em Área Alagada — RL tabular no navegador / Flood Rescue Boat — tabular RL in the browser",
   "type": "module",
   "license": "MIT",
-  "scripts": { "test": "node --test tests/" },
+  "author": "Epitácio Vicente do Nascimento Neto; Antonio Clerton Santana de Araujo",
+  "repository": { "type": "git", "url": "git+https://github.com/epineto/rescue-boat-rl-unisinos.git" },
+  "homepage": "https://epineto.github.io/rescue-boat-rl-unisinos/",
+  "private": true,
+  "scripts": {
+    "test": "node --test tests/",
+    "serve": "python3 -m http.server 8000"
+  },
   "engines": { "node": ">=18" }
 }
