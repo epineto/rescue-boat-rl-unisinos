@@ -1,0 +1,8 @@
+node_modules/
+.DS_Store
+*.log
+.env
+*.key
+*_key
+__pycache__/
+saidas_t2/
