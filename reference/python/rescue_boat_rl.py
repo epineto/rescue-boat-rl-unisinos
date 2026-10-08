@@ -21,6 +21,8 @@
 #
 # **Como executar no Colab:** *Ambiente de execução → Executar tudo*. Defina `RAPIDO = True` na célula de configuração
 # para um teste de poucos minutos; com `RAPIDO = False` roda a busca completa usada no relatório.
+#
+# > **Material acessório:** aplicação web interativa (roda no navegador, sem instalar nada) para refazer estes experimentos: https://epineto.github.io/rescue-boat-rl-unisinos/ · Repositório (MIT): https://github.com/epineto/rescue-boat-rl-unisinos
 
 # %% [markdown]
 # ## 0. Configuração

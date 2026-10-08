@@ -195,7 +195,11 @@ main { max-width: var(--larg); margin: 0 auto; padding: .4rem 1rem 0; }
 .ico { font-style: normal; filter: saturate(.8); }
 .secao { padding: 1.1rem 0 .2rem; scroll-margin-top: var(--nav-h); }
 .secao > h2 { display: flex; gap: .4rem; align-items: baseline; }
-.lede { margin: 0 0 .6rem; color: var(--texto-suave); max-width: 80ch; font-size: .9rem; }
+.lede { margin: 0 0 .6rem; color: var(--texto-suave); font-size: .9rem; }
+.lede { max-width: 72ch; text-align: justify; text-align-last: left; }  /* subtítulo da seção: bloco justificado, em 2+ linhas (sem esticar uma linha única) */
+/* texto corrido justificado de um lado ao outro (com hifenização conforme o idioma da página) */
+.lede, .resumo, .nota, .cartao > p { text-align: justify; text-justify: inter-word; hyphens: auto; -webkit-hyphens: auto; }
+.cartao > p.status, .cartao > p[aria-live], .cartao > p.sem-justificar { text-align: left; hyphens: manual; }
 .grade2, .coluna { display: grid; gap: .9rem; min-width: 0; align-content: start; }
 .grade2 { grid-template-columns: minmax(0, 1fr); align-items: start; }
 @media (min-width: 760px) { .grade2 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
