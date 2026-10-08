@@ -1,8 +1,111 @@
 <!doctype html>
 <html lang="pt-BR">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Barco de Resgate · Flood Rescue Boat</title>
-<style>body{font-family:Arial,Helvetica,sans-serif;margin:0;display:grid;place-items:center;min-height:100vh;background:#f4f6fb;color:#1d2369}
-main{max-width:34rem;padding:2rem;text-align:center}h1{margin:.2em 0}p{color:#444}</style></head>
-<body><main><img src="assets/unisinos.png" alt="Unisinos" style="width:11rem;margin-bottom:1rem"><h1>Barco de Resgate em Área Alagada</h1><h2>Flood Rescue Boat</h2>
-<p>Em construção · Under construction</p></main></body></html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Barco de Resgate em Área Alagada · Aprendizado por Reforço</title>
+<meta name="description" content="Aplicação interativa de aprendizado por reforço tabular: um barco resgata pessoas em um mapa alagado. Trabalho da Unisinos.">
+<meta name="theme-color" content="#1D2369">
+<link rel="icon" href="assets/unisinos.png">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="pular" href="#conteudo" data-i18n="pular">Pular para o conteúdo</a>
+
+<header class="cab">
+  <div class="cab-in">
+    <img class="logo" src="assets/unisinos.png" alt="Unisinos" data-i18n-attr="alt:cab.logo" height="44">
+    <div class="titulos">
+      <h1 data-i18n="cab.titulo">Barco de Resgate em Área Alagada</h1>
+      <p data-i18n="cab.subtitulo">Flood Rescue Boat · Aprendizado por Reforço tabular no navegador</p>
+    </div>
+    <div class="idioma" role="group" aria-label="Idioma" data-i18n-attr="aria-label:lang.grupo">
+      <button type="button" data-lang-btn="pt" lang="pt-BR" aria-pressed="true" title="Português (Brasil)">PT</button>
+      <button type="button" data-lang-btn="en" lang="en" aria-pressed="false" title="English">EN</button>
+    </div>
+  </div>
+</header>
+
+<main id="conteudo" class="grade">
+  <div class="coluna">
+    <section class="cartao" aria-labelledby="t-amb">
+      <h2 id="t-amb" data-i18n="amb.titulo">Ambiente</h2>
+      <div class="mapa-caixa"><canvas id="mapa" role="img" aria-describedby="mapa-desc"></canvas></div>
+      <pre id="mapa-desc" class="so-leitor"></pre>
+      <ul class="legenda" aria-label="Legenda" data-i18n-attr="aria-label:leg.titulo">
+        <li><i class="sw" style="background:#EAF3FB"></i><span data-i18n="leg.agua">Água</span></li>
+        <li><i class="sw" style="background:#9CC9EC;color:#1D2369">≈</i><span data-i18n="leg.corr">Correnteza</span></li>
+        <li><i class="sw" style="background:#C9A27E;color:#5A3A1A">✕</i><span data-i18n="leg.destrocos">Destroços</span></li>
+        <li><i class="sw" style="background:#5B5F6B"></i><span data-i18n="leg.bloqueio">Bloqueio</span></li>
+        <li><i class="sw" style="background:#BFE3C9;color:#2E7D5B">H</i><span data-i18n="leg.abrigo">Abrigo</span></li>
+        <li><i class="sw" style="background:#EAF3FB;color:#C0392B">P</i><span data-i18n="leg.pessoa">Pessoa ilhada</span></li>
+        <li><svg class="sw" viewBox="-0.5 -0.5 1 1" aria-hidden="true"><rect x="-.5" y="-.5" width="1" height="1" fill="#EAF3FB"/><path d="M-.32 .08H.32L.2 .28H-.2Z" fill="#8B5A2B"/><path d="M.03 -.32V.04H.28Z" fill="#fff" stroke="#1D2369" stroke-width=".04"/></svg><span data-i18n="leg.barco">Barco</span></li>
+      </ul>
+      <p id="resumo" class="resumo"></p>
+      <fieldset class="campos">
+        <legend data-i18n="amb.params">Parâmetros do ambiente</legend>
+        <div class="campo"><label for="p-destrocos" data-i18n="amb.rDestrocos">Penalidade dos destroços</label>
+          <input id="p-destrocos" type="number" step="1" min="-100" max="0" value="-10" inputmode="decimal"></div>
+        <div class="campo"><label for="p-corr" data-i18n="amb.pCorr">Probabilidade da correnteza</label>
+          <input id="p-corr" type="number" step="0.05" min="0" max="1" value="0.2" inputmode="decimal"></div>
+        <div class="campo"><label for="p-cap" data-i18n="amb.capacidade">Capacidade do barco (pessoas)</label>
+          <select id="p-cap"><option value="1">1</option><option value="2" selected>2</option><option value="3">3</option></select></div>
+        <button type="button" id="b-restaurar" class="btn sec" data-i18n="amb.restaurar">Restaurar padrão</button>
+        <p class="nota" data-i18n="amb.aviso">Ao mudar um parâmetro, o ambiente é reconstruído.</p>
+      </fieldset>
+      <p id="aviso-amb" class="nota aviso" role="status" aria-live="polite"></p>
+    </section>
+
+    <section class="cartao" aria-labelledby="t-ref">
+      <h2 id="t-ref" data-i18n="ref.titulo">Referência: Iteração de Valor</h2>
+      <p class="nota" data-i18n="ref.desc"></p>
+      <dl id="ref-res" class="metricas" aria-live="polite"></dl>
+      <label class="chk"><input type="checkbox" id="c-otima"> <span data-i18n="ref.setas">Mostrar política ótima (setas)</span></label>
+    </section>
+  </div>
+
+  <div class="coluna">
+    <section class="cartao" aria-labelledby="t-tr">
+      <h2 id="t-tr" data-i18n="tr.titulo">Treinar</h2>
+      <fieldset class="campos grade-campos">
+        <legend class="so-leitor" data-i18n="tr.titulo">Treinar</legend>
+        <div class="campo larg"><label for="t-algo" data-i18n="tr.algo">Algoritmo</label>
+          <select id="t-algo"><option value="q" data-i18n="tr.qlearning">Q-learning</option><option value="sarsa" data-i18n="tr.sarsa">Sarsa</option></select></div>
+        <div class="campo"><label for="t-alpha" data-i18n="tr.alpha">α</label><input id="t-alpha" type="number" step="0.01" min="0.001" max="1" value="0.1" inputmode="decimal"></div>
+        <div class="campo"><label for="t-eps" data-i18n="tr.eps0">ε₀</label><input id="t-eps" type="number" step="0.05" min="0" max="1" value="1" inputmode="decimal"></div>
+        <div class="campo"><label for="t-gamma" data-i18n="tr.gamma">γ</label><input id="t-gamma" type="number" step="0.01" min="0" max="1" value="0.95" inputmode="decimal"></div>
+        <div class="campo"><label for="t-nep" data-i18n="tr.nEp">Episódios</label><input id="t-nep" type="number" step="1000" min="100" max="500000" value="30000" inputmode="numeric"></div>
+        <div class="campo"><label for="t-seed" data-i18n="tr.seed">Semente</label><input id="t-seed" type="number" step="1" min="0" value="0" inputmode="numeric"></div>
+      </fieldset>
+      <div class="acoes">
+        <button type="button" id="b-treinar" class="btn" data-i18n="tr.treinar">Treinar</button>
+        <button type="button" id="b-parar" class="btn perigo" data-i18n="tr.parar" disabled>Parar</button>
+      </div>
+      <progress id="barra" max="100" value="0" aria-label="Progresso do treino" data-i18n-attr="aria-label:tr.progressoAria"></progress>
+      <p id="status" class="status" role="status" aria-live="polite"></p>
+
+      <label class="chk"><input type="checkbox" id="c-log" checked> <span data-i18n="tr.escalaLog">Eixo x em escala logarítmica</span></label>
+      <figure class="graf"><figcaption data-i18n="tr.grafRet">Retorno por episódio</figcaption><div class="graf-caixa"><canvas id="g-ret" role="img"></canvas></div></figure>
+      <figure class="graf"><figcaption data-i18n="tr.grafSuc">Taxa de sucesso</figcaption><div class="graf-caixa"><canvas id="g-suc" role="img"></canvas></div></figure>
+
+      <h3 data-i18n="tr.res.titulo">Política gulosa aprendida</h3>
+      <div id="tr-res" aria-live="polite"></div>
+      <label class="chk"><input type="checkbox" id="c-aprendida" disabled> <span data-i18n="tr.res.setas">Mostrar política aprendida (setas)</span></label>
+    </section>
+  </div>
+</main>
+
+<footer class="rodape">
+  <p><strong data-i18n="rod.autores">Autores</strong>: Epitácio Vicente do Nascimento Neto · Antonio Clerton Santana de Araujo</p>
+  <p data-i18n="rod.programa">PPGCA · Unisinos</p>
+  <p data-i18n="rod.professor">Professor: Gabriel de Oliveira Ramos</p>
+  <p class="links">
+    <a href="https://drive.google.com/file/d/1USXmX9e0h3yvlcMSEU0GcgKP6sRh2YRU/view" target="_blank" rel="noopener noreferrer"><span data-i18n="rod.notebook">Notebook público</span> <span class="so-leitor" data-i18n="rod.externo"></span></a>
+    <a href="https://github.com/epineto/rescue-boat-rl-unisinos" target="_blank" rel="noopener noreferrer"><span data-i18n="rod.repo">Repositório</span> <span class="so-leitor" data-i18n="rod.externo"></span></a>
+    <a href="LICENSE" data-i18n="rod.licenca">Licença MIT</a>
+  </p>
+</footer>
+
+<script type="module" src="src/ui/app.js"></script>
+</body>
+</html>

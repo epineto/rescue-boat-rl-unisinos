@@ -1,0 +1,9 @@
+{
+  "name": "rescue-boat-rl-unisinos",
+  "version": "0.1.0",
+  "description": "Barco de Resgate em Área Alagada — RL tabular no navegador / Flood Rescue Boat — tabular RL in the browser",
+  "type": "module",
+  "license": "MIT",
+  "scripts": { "test": "node --test tests/" },
+  "engines": { "node": ">=18" }
+}
