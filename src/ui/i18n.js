@@ -10,10 +10,10 @@ const ouvintes = [];
 export const getLang = () => lang;
 export const onLang = (fn) => ouvintes.push(fn);
 
+// Português é o idioma padrão; só mudamos se a pessoa escolher EN no botão (a escolha fica salva no navegador).
 export function detectar() {
   try { const s = localStorage.getItem(CHAVE); if (s === 'pt' || s === 'en') return s; } catch (_) { /* sem storage */ }
-  const nav = (navigator.languages && navigator.languages[0]) || navigator.language || 'pt';
-  return /^pt/i.test(nav) ? 'pt' : (/^en/i.test(nav) ? 'en' : 'pt');
+  return 'pt';
 }
 
 export function t(chave, vars = {}) {
