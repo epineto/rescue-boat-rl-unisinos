@@ -1,3 +1,5 @@
+<p align="center"><img src="assets/unisinos.png" alt="Unisinos" width="200"></p>
+
 # Barco de Resgate em Área Alagada · Flood Rescue Boat (RL)
 
 **🇧🇷 Português** · [🇬🇧 English below](#english)
