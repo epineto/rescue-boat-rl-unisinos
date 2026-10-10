@@ -15,7 +15,7 @@ export default {
   'zoom.t90': 'Scale 90% (default)',
   'zoom.t100': 'Scale 100%',
 
-  'amb.resumo': 'The map has {nl}×{nc} cells. The MDP has {nS} states (boat position × status of the people: stranded, on board or rescued) and 4 actions (N, S, E, W). Rewards: −1 per step, {rDestrocos} on debris, +50 for each person delivered to the shelter and +100 for rescuing everyone. In the current the boat follows the action with probability {pOk} and is dragged south with probability {pCorr}.',
+  'amb.resumo': 'The map has {nl}×{nc} cells. The MDP has {nS} states (boat position × status of the people: stranded, on board or rescued) and 4 actions (N, S, E, W). Rewards: −1 per step, {rDestrocos} when entering a debris cell (not a terminal state; the episode continues), +50 for each person delivered to the shelter and +100 for rescuing everyone. In the current the boat follows the action with probability {pOk} and is dragged south with probability {pCorr}.',
   'amb.mapaAria': 'Environment map with the boat at the shelter and {n} stranded people',
   'amb.mapaPolOtima': 'Blue arrows: optimal policy from value iteration, for the initial status of the people.',
   'amb.mapaPolAprendida': 'Blue arrows: learned greedy policy, for the initial status of the people.',
@@ -136,7 +136,7 @@ export default {
   'rota.ev.inicio': 'Route started at the shelter (seed {seed}).',
   'rota.ev.embarque': 'Boarding: P{p} got on the boat.',
   'rota.ev.desembarque': 'Drop-off: P{p} reached the shelter (+{r}).',
-  'rota.ev.destrocos': 'The boat crossed the debris ({r}).',
+  'rota.ev.destrocos': 'The boat entered a debris cell ({r}); the episode continues.',
   'rota.ev.arraste': 'The current pushed the boat south.',
   'rota.ev.fim': 'Finished: everyone was saved in {n} steps (+{b} completion bonus); cumulative reward {r}.',
   'rota.ev.limite': 'Reached the {n}-step limit without saving everyone.',

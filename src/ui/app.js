@@ -84,7 +84,7 @@ function desenharMapa() {
 // ---------------------------------------------------------------- renderização de textos dinâmicos
 function renderResumo() {
   const o = S.opts, e = S.env;
-  $('resumo').textContent = t('amb.resumo', { nl: e.nl, nc: e.nc, nS: e.nS, rDestrocos: fmt(o.rDestrocos, 0), pOk: fmt(1 - o.pCorr, 2), pCorr: fmt(o.pCorr, 2) });
+  $('resumo').textContent = t('amb.resumo', { nl: e.nl, nc: e.nc, nS: e.nS, rDestrocos: fmt(o.rDestrocos, 0).replace('-', '−'), pOk: fmt(1 - o.pCorr, 2), pCorr: fmt(o.pCorr, 2) });
 }
 
 function renderRef() {
@@ -274,7 +274,7 @@ function textoEvento(e) {
     case 'inicio': return t('rota.ev.inicio', { seed: e.seed });
     case 'embarque': return t('rota.ev.embarque', { p: e.pessoa });
     case 'desembarque': return t('rota.ev.desembarque', { p: e.pessoa, r: fmt(S.env.opts.rPessoa, 0) });
-    case 'destrocos': return t('rota.ev.destrocos', { r: fmt(o.rDestrocos, 0) });
+    case 'destrocos': return t('rota.ev.destrocos', { r: fmt(o.rDestrocos, 0).replace('-', '−') });
     case 'arraste': return t('rota.ev.arraste');
     case 'fim': return t('rota.ev.fim', { n: fmt(e.t, 0), r: fmt(e.acumulada, 0), b: fmt(S.env.opts.rFinal, 0) });
     default: return t('rota.ev.limite', { n: fmt(MAX_PASSOS_ROTA, 0) });
@@ -539,7 +539,7 @@ const etapasRepro = [
 
 function textoLeiame() {
   const o = S.opts, linhas = [t('rep.leiame.titulo'), new Date().toISOString().slice(0, 10), '',
-    t('rep.leiame.amb', { r: o.rDestrocos, p: o.pCorr, c: o.capacidade, nS: S.env.nS, v: fmt(S.ref.v0, 2) }), '',
+    t('rep.leiame.amb', { r: String(o.rDestrocos).replace('-', '−'), p: o.pCorr, c: o.capacidade, nS: S.env.nS, v: fmt(S.ref.v0, 2) }), '',
     t('rep.leiame.arquivos'), '- comparacao-algoritmos.csv', '- curvas-aprendizado.csv', '- sensibilidade_destrocos.csv', '- busca_hiperparametros.csv', '- busca_por_semente.csv'];
   return linhas.join('\r\n') + '\r\n';
 }

@@ -83,8 +83,34 @@ def carrega_logo(url=LOGO_URL):
 
 _logo = carrega_logo()
 
+from matplotlib.ticker import FuncFormatter, ScalarFormatter
+
+def _fmt_ptbr(casas):
+    """Formatador pt-BR: vírgula decimal, ponto como separador de milhar e sinal de menos tipográfico (−)."""
+    def f(v, _pos=None):
+        if abs(v) < 10 ** (-casas - 1): v = 0.0
+        t = f"{abs(v):,.{casas}f}".replace(",", "X").replace(".", ",").replace("X", ".")
+        return ("\u2212" + t) if v < 0 else t
+    return f
+
+def _casas_decimais(ticks):
+    """Menor número de casas (0 a 3) que representa todos os ticks da escala."""
+    for c in range(4):
+        if all(abs(round(t, c) - t) < 1e-9 * max(1.0, abs(t)) for t in ticks): return c
+    return 3
+
+def formata_eixos_ptbr(fig):
+    """Aplica o formatador pt-BR a todos os eixos numéricos lineares; eixos log mantêm 10^n e eixos sem escala numérica ficam como estão."""
+    for ax in fig.axes:
+        if not ax.axison: continue
+        for eixo, lim in ((ax.xaxis, ax.get_xlim()), (ax.yaxis, ax.get_ylim())):
+            if eixo.get_scale() != "linear" or not isinstance(eixo.get_major_formatter(), ScalarFormatter): continue
+            ticks = [t for t in eixo.get_majorticklocs() if min(lim) - 1e-9 <= t <= max(lim) + 1e-9]
+            if ticks: eixo.set_major_formatter(FuncFormatter(_fmt_ptbr(_casas_decimais(ticks))))
+
 def salva_fig(fig, nome):
-    """Reservamos uma faixa no topo, colocamos a logo (se disponível) e salvamos a figura em SAIDA."""
+    """Reservamos uma faixa no topo, aplicamos o formato numérico pt-BR aos eixos, colocamos a logo (se disponível) e salvamos a figura em SAIDA."""
+    formata_eixos_ptbr(fig)
     fig.tight_layout(rect=[0, 0, 1, 0.86])
     if _logo is not None:
         ax_logo = fig.add_axes([0.76, 0.865, 0.23, 0.135], anchor="NE", zorder=10)
@@ -100,7 +126,7 @@ def salva_fig(fig, nome):
 # 2 a bordo e mapa fixo ⇒ $|\mathcal S| = 32\times 26 = 832$. Ações: N, S, L, O. Em água calma o movimento é determinístico; na correnteza,
 # com prob. 0,8 executa a ação e com 0,2 é arrastado uma célula ao sul. Colisão (parede/bloqueio) mantém o barco no lugar.
 # Embarque e desembarque ocorrem na célula onde o passo termina (barco cheio ⇒ a pessoa continua ilhada; no abrigo todos a bordo desembarcam).
-# Recompensas: −1 por passo (−10 se o passo termina em destroços), +50 por pessoa entregue e +100 ao resgatar todas. Término: todas salvas;
+# Recompensas: −1 por passo (−10 ao entrar em célula de destroços — não é estado terminal: o episódio continua), +50 por pessoa entregue e +100 ao resgatar todas. Término: todas salvas;
 # truncamento por limite de passos.
 
 # %%
@@ -235,7 +261,7 @@ class RescueBoatEnv(gym.Env):
                 if ch == "H": ax.text(px, py, "H", ha="center", va="center", color=VERDE, fontsize=tam + 1, fontweight="bold")
         for k, p in enumerate(self.pessoas):
             if sit[k] == 0:
-                if politica is None: ax.text(p[1] + .5, self.nl - 1 - p[0] + .5, f"P{k+1}", ha="center", va="center", color=VERMELHO, fontsize=10, fontweight="bold")
+                if politica is None: ax.text(p[1] + .5, self.nl - 1 - p[0] + .5, f"P{k+1}", ha="center", va="center", color=VERMELHO, fontsize=10, fontweight="bold", zorder=7, bbox=dict(boxstyle="round,pad=0.12", fc="white", ec="none", alpha=0.8))
                 else: ax.text(p[1] + .2, self.nl - 1 - p[0] + .8, f"P{k+1}", ha="center", va="center", color=VERMELHO, fontsize=7, fontweight="bold")
         bx, by = cel[1] + .5, self.nl - 1 - cel[0] + .5                       # desenhamos o barco: casco + vela
         if politica is None: ax.add_patch(Polygon([(bx - .30, by - .08), (bx + .30, by - .08), (bx + .18, by - .26), (bx - .18, by - .26)], fc="#7A4B1F", ec="none", zorder=5))
@@ -276,7 +302,7 @@ assert env.decodifica(s2) == ((1, 5), (1, 1, 0))
 # (3b) desembarque + término: chegando ao abrigo com os dois a bordo, ganhamos +50 por pessoa; com tudo salvo, +100
 s_e = env.codifica((4, 2), (1, 1, 2)); s2, r, f = so_destino(s_e, 1)           # S: (4,2) -> (5,2) = abrigo
 assert env.decodifica(s2) == ((5, 2), (2, 2, 2)) and r == -1 + 2 * 50 + 100 and f
-# (4) destroços: terminar o passo neles custa -10 (e não -1)
+# (4) destroços: entrar em célula de destroços custa -10 (e não -1); não é estado terminal, o episódio continua
 s_g = env.codifica((4, 2), (0, 0, 0)); s2, r, f = so_destino(s_g, 0)           # N: (4,2) -> (3,2) = destroços
 assert env.decodifica(s2)[0] == (3, 2) and r == -10
 print("Regras do ambiente conferidas (embarque, capacidade, desembarque, término e destroços).")
@@ -627,7 +653,7 @@ axs[0].legend(fontsize=7); salva_fig(fig, "fig_curvas.png"); plt.show()
 # %% [markdown]
 # ### 5.1 Política aprendida e o dilema "caminho curto × contorno"
 # A rota pelos destroços ao centro é curta e arriscada (a correnteza pode empurrar o barco para os destroços, −10); o contorno pelas laterais é mais longo,
-# porém seguro. Medimos, para cada política, quantos passos terminam em destroços e na correnteza.
+# porém seguro. Medimos, para cada política, quantos passos entram em célula de destroços (−10; não é estado terminal) e na correnteza.
 
 # %%
 def rota(politica, env, seed=0, max_passos=100):

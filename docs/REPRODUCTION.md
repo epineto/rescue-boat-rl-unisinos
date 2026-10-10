@@ -2,7 +2,7 @@
 
 [Versão em português](REPRODUCAO.md) · [README](../README.md)
 
-This guide maps each table, figure and number of the Assignment 2 report to the card/button of the app (<https://epineto.github.io/rescue-boat-rl-unisinos/>) and gives the expected values. Use the **default environment** (debris penalty −10, current 0.2, capacity 2, default 6×6 map). Click **EN** in the header for English.
+This guide maps each table, figure and number of the Assignment 2 report to the card/button of the app (<https://epineto.github.io/rescue-boat-rl-unisinos/>) and gives the expected values. Use the **default environment** (debris penalty −10 when entering a debris cell, which is not a terminal state; current 0.2, capacity 2, default 6×6 map). Click **EN** in the header for English.
 
 > **Shortcut:** the **Reproduce** section (button **Reproduce the study**) runs Comparison (20 seeds), full Sensitivity (10 seeds) and full Search (66 configurations × 10 seeds) in sequence, restores the default environment and finally downloads a `.zip` with every CSV. It takes a few minutes. The manual, item-by-item mapping follows.
 

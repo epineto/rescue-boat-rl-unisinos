@@ -2,7 +2,7 @@
 
 [English version](REPRODUCTION.md) · [README](../README.md)
 
-Este guia mapeia cada tabela, figura e número do relatório do Trabalho 2 ao cartão/botão da aplicação (<https://epineto.github.io/rescue-boat-rl-unisinos/>) e informa os valores esperados. Use o **ambiente padrão** (penalidade dos destroços −10, correnteza 0,2, capacidade 2, mapa 6×6 padrão) e o idioma que preferir.
+Este guia mapeia cada tabela, figura e número do relatório do Trabalho 2 ao cartão/botão da aplicação (<https://epineto.github.io/rescue-boat-rl-unisinos/>) e informa os valores esperados. Use o **ambiente padrão** (penalidade dos destroços −10 ao entrar em célula de destroços, que não é estado terminal; correnteza 0,2, capacidade 2, mapa 6×6 padrão) e o idioma que preferir.
 
 > **Atalho:** a seção **Reproduzir** (botão **Reproduzir a pesquisa**) executa em sequência a Comparação (20 sementes), a Sensibilidade completa (10 sementes) e a Busca completa (66 configurações × 10 sementes), restaura o ambiente padrão e, no fim, baixa um `.zip` com todos os CSVs. Leva alguns minutos. Abaixo está o mapeamento manual, item a item.
 

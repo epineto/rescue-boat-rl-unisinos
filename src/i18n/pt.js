@@ -15,7 +15,7 @@ export default {
   'zoom.t90': 'Escala 90% (padrão)',
   'zoom.t100': 'Escala 100%',
 
-  'amb.resumo': 'O mapa tem {nl}×{nc} células. O MDP tem {nS} estados (posição do barco × situação das pessoas: ilhada, a bordo ou salva) e 4 ações (N, S, L, O). Recompensas: −1 por passo, {rDestrocos} ao passar pelos destroços, +50 por pessoa levada ao abrigo e +100 ao salvar todas. Na correnteza o barco segue a ação com probabilidade {pOk} e é arrastado para o sul com probabilidade {pCorr}.',
+  'amb.resumo': 'O mapa tem {nl}×{nc} células. O MDP tem {nS} estados (posição do barco × situação das pessoas: ilhada, a bordo ou salva) e 4 ações (N, S, L, O). Recompensas: −1 por passo, {rDestrocos} ao entrar em célula de destroços (não é estado terminal; o episódio continua), +50 por pessoa levada ao abrigo e +100 ao salvar todas. Na correnteza o barco segue a ação com probabilidade {pOk} e é arrastado para o sul com probabilidade {pCorr}.',
   'amb.mapaAria': 'Mapa do ambiente com o barco no abrigo e {n} pessoas ilhadas',
   'amb.mapaPolOtima': 'Setas azuis: política ótima da iteração de valor, para a situação inicial das pessoas.',
   'amb.mapaPolAprendida': 'Setas azuis: política gulosa aprendida, para a situação inicial das pessoas.',
@@ -136,7 +136,7 @@ export default {
   'rota.ev.inicio': 'Rota iniciada no abrigo (semente {seed}).',
   'rota.ev.embarque': 'Embarque: P{p} entrou no barco.',
   'rota.ev.desembarque': 'Desembarque: P{p} chegou ao abrigo (+{r}).',
-  'rota.ev.destrocos': 'O barco passou pelos destroços ({r}).',
+  'rota.ev.destrocos': 'O barco entrou em célula de destroços ({r}); o episódio continua.',
   'rota.ev.arraste': 'A correnteza arrastou o barco para o sul.',
   'rota.ev.fim': 'Término: todas as pessoas foram salvas em {n} passos (+{b} de término); recompensa acumulada {r}.',
   'rota.ev.limite': 'Limite de {n} passos atingido sem salvar todas as pessoas.',

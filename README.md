@@ -39,7 +39,7 @@ A página tem uma barra de seções fixa no topo:
 
 | Seção | O que faz |
 |---|---|
-| **Ambiente e referência** | Mapa, legenda, parâmetros (penalidade dos destroços, correnteza, capacidade) e a Iteração de Valor exata: V*(s₀), varreduras, rota ótima e setas da política. |
+| **Ambiente e referência** | Mapa, legenda, parâmetros (penalidade dos destroços, aplicada ao entrar em célula de destroços; não é estado terminal, correnteza, capacidade) e a Iteração de Valor exata: V*(s₀), varreduras, rota ótima e setas da política. |
 | **Treinar** | Q-learning, Sarsa, Monte Carlo ε-soft (média amostral ou α constante) e Iteração de Política. Treino ao vivo em Web Worker, com progresso, curvas e botão Parar. |
 | **Rota** | Animação passo a passo da política ótima ou da aprendida (semente, velocidade, Passo, Reiniciar), com registro de eventos. Com `prefers-reduced-motion` não há animação contínua. |
 | **Comparar** | Iteração de Valor + Monte Carlo + Q-learning + Sarsa com 3 a 20 sementes em um *pool* de Web Workers (`navigator.hardwareConcurrency`, máx. 8): tabela (±IC95), curvas com faixas de IC, mini-mapas das políticas e CSV. |
@@ -140,7 +140,7 @@ A sticky section bar sits at the top of the page:
 
 | Section | What it does |
 |---|---|
-| **Environment & reference** | Map, legend, parameters (debris penalty, current, capacity) and exact Value Iteration: V*(s₀), sweeps, optimal route and policy arrows. |
+| **Environment & reference** | Map, legend, parameters (debris penalty, applied when entering a debris cell; not a terminal state, current, capacity) and exact Value Iteration: V*(s₀), sweeps, optimal route and policy arrows. |
 | **Train** | Q-learning, Sarsa, ε-soft Monte Carlo (sample average or constant α) and Policy Iteration. Live training in a Web Worker with progress, curves and a Stop button. |
 | **Route** | Step-by-step animation of the optimal or learned policy (seed, speed, Step, Restart) with an event log. With `prefers-reduced-motion` there is no continuous animation. |
 | **Compare** | Value Iteration + Monte Carlo + Q-learning + Sarsa with 3 to 20 seeds on a Web Worker pool (`navigator.hardwareConcurrency`, max 8): table (±95% CI), curves with CI bands, policy mini-maps and CSV. |
