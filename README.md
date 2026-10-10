@@ -97,7 +97,8 @@ Valores de referência: V*(s₀) = 161,93 (γ = 0,99); Q-learning (α = 0,1; ε�
 ## Materiais
 - Notebook (Google Colab, público): <https://drive.google.com/file/d/1USXmX9e0h3yvlcMSEU0GcgKP6sRh2YRU/view>
 - Código de referência em Python: [`reference/python/rescue_boat_rl.py`](reference/python/rescue_boat_rl.py)
-- Relatório e vídeo: serão adicionados aqui quando publicados.
+- Vídeo de apresentação (YouTube): https://youtu.be/BPthN4Pvb9M
+- Relatório: será adicionado aqui quando publicado.
 
 ## Créditos
 **Autores:** Epitácio Vicente do Nascimento Neto · Antonio Clerton Santana de Araujo — Programa de Pós-Graduação em Computação Aplicada (PPGCA), Unisinos. **Professor:** Gabriel de Oliveira Ramos. Para citar, veja [`CITATION.cff`](CITATION.cff).
@@ -177,7 +178,8 @@ Reference values: V*(s₀) = 161.93 (γ = 0.99); Q-learning (α = 0.1; ε₀ = 1
 ## Materials
 - Notebook (Google Colab, public): <https://drive.google.com/file/d/1USXmX9e0h3yvlcMSEU0GcgKP6sRh2YRU/view>
 - Reference Python code: [`reference/python/rescue_boat_rl.py`](reference/python/rescue_boat_rl.py)
-- Report and video: will be added here once published.
+- Presentation video (YouTube): https://youtu.be/BPthN4Pvb9M
+- Report: will be added here once published.
 
 ## Credits
 **Authors:** Epitácio Vicente do Nascimento Neto · Antonio Clerton Santana de Araujo — Graduate Program in Applied Computing (PPGCA), Unisinos. **Instructor:** Gabriel de Oliveira Ramos. To cite, see [`CITATION.cff`](CITATION.cff).

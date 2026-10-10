@@ -391,5 +391,6 @@ export default {
   'mat.titulo': 'Materials',
   'mat.notebook': 'Public notebook (Google Colab)',
   'mat.python': 'Python reference code',
+  'mat.video': 'Presentation video (YouTube)',
   'mat.nota': 'The values on this page reproduce the report; see the correspondence table in docs/REPRODUCTION.md.',
 };
